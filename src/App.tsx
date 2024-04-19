@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { WeatherHeader } from './components/WeatherHeader/WeatherHeader';
 import { WeatherSummary } from './components/WeatherSummary/WeatherSummary';
 import { WeatherForecastDetails } from './components/WeatherForecastDetails/WeatherForecastDetails';
+import GlobalStyles from '../src/ GlobalStyles';
 
 const AppWrapper = styled.div`
   width: 1366px;
@@ -14,11 +15,14 @@ const AppWrapper = styled.div`
 `;
 const App = () => {
   return (
-    <AppWrapper>
-      <WeatherHeader />
-      <WeatherSummary />
-      <WeatherForecastDetails />
-    </AppWrapper>
+    <>
+      <GlobalStyles />
+      <AppWrapper>
+        <WeatherHeader />
+        <WeatherSummary />
+        <WeatherForecastDetails />
+      </AppWrapper>
+    </>
   );
 };
 

@@ -2,6 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import IconSearch from '../../../public/assets/images/IconSearch';
 
+interface InputSearchProps {
+  onCityChange: (city: string) => void;
+}
+
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
@@ -24,7 +28,8 @@ const StyledInput = styled.input`
   height: 27px;
   box-sizing: border-box;
   background-color: transparent;
-  padding-left: 30px;
+  font-size: 16px;
+  color: #ffffff;
 `;
 
 const StyledIconSearch = styled.div`
@@ -35,13 +40,19 @@ const StyledIconSearch = styled.div`
   margin-top: 5px;
 `;
 
-export const InputSearch = ({ onCityChange }) => {
+export const InputSearch: React.FC<InputSearchProps> = ({ onCityChange }) => {
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      onCityChange(event.currentTarget.value);
+    }
+  };
+
   return (
     <SearchContainer>
       <StyledInput
         name='myInput'
         placeholder='Введите текст...'
-        onChange={(e) => onCityChange(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
       <StyledIconSearch>
         <IconSearch />

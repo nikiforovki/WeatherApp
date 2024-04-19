@@ -57,25 +57,26 @@ const SlashButton = styled.button`
   background: none;
 `;
 
-export const TemperatureScaleToggle = () => {
+export const TemperatureScaleToggle = ({ onToggle }) => {
   const [isActive, setIsActive] = useState(false);
 
   const handleClick = () => {
     setIsActive(!isActive);
+    onToggle(!isActive);
   };
 
   return (
     <ToggleContainer onClick={handleClick}>
       {isActive ? (
-        <ActiveToggleButton>C</ActiveToggleButton>
-      ) : (
-        <InactiveToggleButton>C</InactiveToggleButton>
-      )}
-      <SlashButton>/</SlashButton>
-      {!isActive ? (
         <ActiveToggleButton>F</ActiveToggleButton>
       ) : (
         <InactiveToggleButton>F</InactiveToggleButton>
+      )}
+      <SlashButton>/</SlashButton>
+      {!isActive ? (
+        <ActiveToggleButton>C</ActiveToggleButton>
+      ) : (
+        <InactiveToggleButton>C</InactiveToggleButton>
       )}
     </ToggleContainer>
   );

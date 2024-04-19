@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import IconСloudСomputing from '../../../public/assets/images/IconСloudСomputing.svg';
 
 const BoxStyled = styled.div`
@@ -94,34 +93,10 @@ const HourlyWeatherForecast = () => {
     { time: '6 pm', temperature: 20 },
   ]);
 
-  useEffect(() => {
-    // const fetchWeatherData = async () => {
-    //   try {
-    //     const apiKey = 'f6ff5e7dcd656163a217302f41dc2916'; // Замените на ваш API ключ
-    //     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=Berlin&appid=${apiKey}`; // Замените на ваш URL API
-    //     const response = await axios.get(apiUrl);
-    //     const updatedForecastData = forecastData.map((item) => {
-    //       const forecastItem = response.data.forecast.find(
-    //         (forecast) => forecast.time === item.time,
-    //       );
-    //       return {
-    //         ...item,
-    //         temperature: forecastItem ? forecastItem.temperature : null,
-    //       };
-    //     });
-    //     setForecastData(updatedForecastData);
-    //   } catch (error) {
-    //     console.error('Ошибка при получении данных о погоде:', error);
-    //   }
-    // };
-    // fetchWeatherData();
-  }, []);
-
   return (
     <BoxStyled>
       {forecastData.map((item, index) => (
         <div key={index}>
-          {/*<StyledNowText>Now</StyledNowText>*/}
           <StyledBoxText>
             <StyledTime>{item.time}</StyledTime>
             <StyledTemperature>{item.temperature}</StyledTemperature>
@@ -129,8 +104,6 @@ const HourlyWeatherForecast = () => {
               <IconСloudСomputing />
             </StyledIconСloudСomputing>
           </StyledBoxText>
-          {/*<StyledTemperature>{item.temperature} C</StyledTemperature>*/}
-          {/*<StyledNowFon />*/}
           <StyledBoxFon />
         </div>
       ))}

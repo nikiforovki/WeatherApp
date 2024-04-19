@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCurrentWeatherRequest } from '../../Redux/actions/actions';
+import { RootState } from '../../Redux/store/store';
 import styled from 'styled-components';
 import FeatherSunrise from '../../../public/assets/images/IconFeatherSunrise.svg';
 import FeatherSunset from '../../../public/assets/images/IconFeatherSunset.svg';
@@ -8,15 +11,6 @@ import AwesomeWind from '../../../public/assets/images/IconAwesomeWind.svg';
 import GroupArrow from '../../../public/assets/images/IconGroupArrow.svg';
 import AwesomeTemperatureHigh from '../../../public/assets/images/IconAwesomeTemperatureHigh.svg';
 import MaterialVisibility from '../../../public/assets/images/IconMaterialVisibility.svg';
-import axios from 'axios';
-
-interface StyledTimeProps {
-  index: number;
-}
-interface StyledTitleProps {
-  title: string;
-  index: number;
-}
 
 const StyledFeatherSunrise = styled(FeatherSunrise)`
   position: fixed;
@@ -150,8 +144,7 @@ const WeatherCard = styled.div`
 const StyledTitle = styled.div<StyledTitleProps>`
   font-size: 19px;
   color: #072a41;
-  top: ${(props) =>
-    props.index >= 3 ? '650px' : '816px'}; // Используем props.index
+  top: ${(props) => (props.index >= 3 ? '650px' : '816px')};
 
   ${(props) =>
     props.index === 0 &&
@@ -318,7 +311,7 @@ const StyledHumidity = styled.div`
   height: 42px;
   top: 681px;
   left: 1030px;
-  font-size: 35px;
+  font-size: 32px;
   color: #072a41;
 `;
 
@@ -356,137 +349,136 @@ const StyledVisibility = styled.div`
   position: fixed;
   width: 96px;
   height: 40px;
-  text-outline: 847px;
   top: 847px;
   left: 1030px;
   font-size: 34px;
   color: black;
 `;
 
-function convertTimestampToHoursAndMinutes(unixTimestamp) {
-  let dateObj = new Date(unixTimestamp * 1000);
-  let hours = dateObj.getUTCHours();
-  let minutes = dateObj.getUTCMinutes();
-  let formattedTime =
-    hours.toString().padStart(2, '0') +
-    ':' +
-    minutes.toString().padStart(2, '0');
-  return formattedTime;
-}
-
-export const WeatherForecastDetails = () => {
-  const [searchCity, setSearchCity] = useState('Berlin');
-  const [forecastData, setForecastData] = useState([]);
+export const WeatherForecastDetails: React.FC = () => {
+  const dispatch = useDispatch();
+  const weatherData = useSelector(
+    (state: RootState) => state.weather.weatherData,
+  );
+  const error = useSelector((state: RootState) => state.weather.error);
 
   useEffect(() => {
-    const fetchWeatherData = async () => {
-      try {
-        const apiKey = 'f6ff5e7dcd656163a217302f41dc2916';
-        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${apiKey}`;
-        const response = await axios.get(apiUrl);
+    dispatch(fetchCurrentWeatherRequest({ city: 'Berlin' }));
+  }, [dispatch]);
 
-        const sunrise = response.data.sys.sunrise;
-        const sunset = response.data.sys.sunset;
-        const humidity = `${response.data.main.humidity} %`;
-        const wind = `${Math.round(response.data.wind.speed)} km/h`;
-        const pressure = `${response.data.main.pressure} hPa`;
-        const feelsLike = `${Math.round(response.data.main.feels_like)} °`;
-        const visibility = `${response.data.visibility / 1000} km`;
+  const convertTimestampToHoursAndMinutes = (unixTimestamp: number) => {
+    const dateObj = new Date(unixTimestamp * 1000);
+    const hours = dateObj.getUTCHours();
+    const minutes = dateObj.getUTCMinutes();
+    const formattedTime =
+      hours.toString().padStart(2, '0') +
+      ':' +
+      minutes.toString().padStart(2, '0');
+    return formattedTime;
+  };
 
-        const sunriseTime = convertTimestampToHoursAndMinutes(sunrise) + 'am';
-        const sunsetTime = convertTimestampToHoursAndMinutes(sunset) + 'pm';
+  if (error) {
+    return <div>Error fetching weather data: {error}</div>;
+  }
 
-        setForecastData([
-          {
-            id: 1,
-            title: 'SUNRISE',
-            image: <StyledFeatherSunrise />,
-            sunriseTime,
-          },
-          {
-            id: 2,
-            title: 'SUNSET',
-            image: <StyledFeatherSunset />,
-            sunsetTime,
-          },
+  if (!weatherData) {
+    return <div>Loading...</div>;
+  }
 
-          {
-            id: 3,
-            title: 'PRECIPITATION',
-            image: <StyledWeatherRaindrop />,
-          },
+  const sunriseTime =
+    convertTimestampToHoursAndMinutes(weatherData.sys.sunrise) + 'am';
+  const sunsetTime =
+    convertTimestampToHoursAndMinutes(weatherData.sys.sunset) + 'pm';
+  const humidity = `${weatherData.main.humidity} %`;
+  const wind = `${Math.round(weatherData.wind.speed)} km/h`;
+  const pressure = `${weatherData.main.pressure} hPa`;
+  const feelsLike = `${Math.round(weatherData.main.feels_like)} °`;
+  const visibility = `${weatherData.visibility / 1000} km`;
 
-          {
-            id: 4,
-            title: 'HUMIDITY',
-            image: <StyledExclusion />,
-            humidity,
-          },
+  if (weatherData) {
+    const sunriseTime =
+      convertTimestampToHoursAndMinutes(weatherData.sys.sunrise) + 'am';
+    const sunsetTime =
+      convertTimestampToHoursAndMinutes(weatherData.sys.sunset) + 'pm';
 
-          {
-            id: 5,
-            title: 'WIND',
-            time: '16 pm',
-            image: <StyledAwesomeWind />,
-            wind,
-          },
+    const forecastData = [
+      {
+        id: 1,
+        title: 'SUNRISE',
+        image: <StyledFeatherSunrise />,
+        sunriseTime,
+      },
+      {
+        id: 2,
+        title: 'SUNSET',
+        image: <StyledFeatherSunset />,
+        sunsetTime,
+      },
+      {
+        id: 3,
+        title: 'PRECIPITATION',
+        image: <StyledWeatherRaindrop />,
+      },
+      {
+        id: 4,
+        title: 'HUMIDITY',
+        image: <StyledExclusion />,
+        humidity,
+      },
+      {
+        id: 5,
+        title: 'WIND',
+        time: '16 pm',
+        image: <StyledAwesomeWind />,
+        wind,
+      },
+      {
+        id: 6,
+        title: 'PRESSURE',
+        time: '16 pm',
+        image: <StyledGroupArrow />,
+        pressure,
+      },
+      {
+        id: 7,
+        title: 'FEELS LIKE',
+        time: '16 pm',
+        image: <StyledAwesomeTemperatureHigh />,
+        feelsLike,
+      },
+      {
+        id: 8,
+        title: 'VISIBILITY',
+        time: '16 pm',
+        image: <StyledMaterialVisibility />,
+        visibility,
+      },
+    ];
 
-          {
-            id: 6,
-            title: 'PRESSURE',
-            time: '16 pm',
-            image: <StyledGroupArrow />,
-            pressure,
-          },
-          {
-            id: 7,
-            title: 'FEELS LIKE',
-            time: '16 pm',
-            image: <StyledAwesomeTemperatureHigh />,
-            feelsLike,
-          },
-          {
-            id: 8,
-            title: 'VISIBILITY',
-            time: '16 pm',
-            image: <StyledMaterialVisibility />,
-            visibility,
-          },
-        ]);
-      } catch (error) {
-        console.error('Ошибка при получении данных о погоде:', error);
-      }
-    };
-
-    fetchWeatherData();
-  }, []);
-  return (
-    <div>
-      <StyledLine />
-      <StyledText>Weather Details</StyledText>
-      <StyledWeatherForecastDetails>
-        {forecastData.map((item, index) => (
-          <WeatherCard
-            key={item.id}
-            className={index === forecastData.length - 1 ? 'last-card' : ''}
-          >
-            {item.image}
-            <StyledTitle index={index}>{item.title}</StyledTitle>
-
-            <StyledSunrese>{item.sunriseTime}</StyledSunrese>
-
-            <StyledSunset>{item.sunsetTime}</StyledSunset>
-
-            <StyledPrecipitation></StyledPrecipitation>
-
-            <StyledHumidity>{item.humidity}</StyledHumidity>
-            <StyledWind>{item.wind}</StyledWind>
-            <StyledPressure>{item.pressure}</StyledPressure>
-            <StyledFeelsLike>{item.feelsLike}</StyledFeelsLike>
-            <StyledVisibility>{item.visibility}</StyledVisibility>
-          </WeatherCard>
-        ))}
-      </StyledWeatherForecastDetails>
-    </div>
-  );
+    return (
+      <div>
+        <StyledLine />
+        <StyledText>Weather Details</StyledText>
+        <StyledWeatherForecastDetails>
+          {forecastData.map((item, index) => (
+            <WeatherCard
+              key={item.id}
+              className={index === forecastData.length - 1 ? 'last-card' : ''}
+            >
+              {item.image}
+              <StyledTitle index={index}>{item.title}</StyledTitle>
+              <StyledSunrese>{item.sunriseTime}</StyledSunrese>
+              <StyledSunset>{item.sunsetTime}</StyledSunset>
+              <StyledPrecipitation></StyledPrecipitation>
+              <StyledHumidity>{item.humidity}</StyledHumidity>
+              <StyledWind>{item.wind}</StyledWind>
+              <StyledPressure>{item.pressure}</StyledPressure>
+              <StyledFeelsLike>{item.feelsLike}</StyledFeelsLike>
+              <StyledVisibility>{item.visibility}</StyledVisibility>
+            </WeatherCard>
+          ))}
+        </StyledWeatherForecastDetails>
+      </div>
+    );
+  }
 };

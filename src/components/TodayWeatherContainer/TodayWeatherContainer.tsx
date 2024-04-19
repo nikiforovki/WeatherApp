@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux'; // Импортируем useDispatch и useSelector
-import { fetchCurrentWeather } from '../../Redux/slice/currentweatherSlice';
 import Snowflake from '../../../public/assets/images/Snowflake';
+import WeatherIcon from '../../../public/assets/images/WeatherIcon';
+import SunIcon from '../../../public/assets/images/SunIcon';
 import IconMaterialLocation from '../../../public/assets/images/IconMaterialLocation.svg';
 import { InputSearch } from '../InputSearch/InputSearch';
-// import { fetchCurrentWeather } from '../../Redux/thunks/featchCurrentWeather';
-import { useCustomDispatch } from '../../hooks/store';
+import { TemperatureScaleToggle } from '../ToggleTemperatureScale/ToggleTemperatureScale';
+import { fetchCurrentWeatherRequest } from '../../Redux/actions/fetchCurrentWeatherRequest';
+import { RootState } from '../../Redux/store/store';
 
 const StyledToday = styled.div`
   position: fixed;
@@ -114,16 +116,26 @@ const StyledNowIcon = styled.div`
   top: 271px;
 `;
 
-const TodayWeatherContainer = () => {
+const TodayWeatherContainer: React.FC = () => {
   const dispatch = useDispatch();
-  const weatherData = useSelector((state) => state.currentWeather);
-  const error = useSelector((state) => state.currentWeather.error);
-
-  const [searchCity, setSearchCity] = useState('Berlin');
+  const weatherData = useSelector(
+    (state: RootState) => state.weather.weatherData,
+  );
+  const error = useSelector((state: RootState) => state.weather.error);
+  const [currentCity, setCurrentCity] = useState('Berlin');
+  const [isCelsius, setIsCelsius] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchCurrentWeather({ city: searchCity }));
-  }, [dispatch, searchCity]);
+    if (currentCity) {
+      dispatch(fetchCurrentWeatherRequest(currentCity));
+    }
+  }, [dispatch, currentCity]);
+
+  const handleTemperatureToggle = (isCelsius: boolean) => {
+    setIsCelsius(isCelsius);
+  };
+
+  const weatherDescription = weatherData?.weather[0]?.description;
 
   const currentDate = new Date().toLocaleDateString('en-US', {
     weekday: 'short',
@@ -139,43 +151,67 @@ const TodayWeatherContainer = () => {
     return <div>Загрузка данных о погоде...</div>;
   }
 
-  const currentTemperature = weatherData.main?.temp
-    ? weatherData.main.temp - 273.15
-    : 0;
-
-  // Вывод данных в консоль
-  console.log('weatherData:', weatherData);
-  console.log('error:', error);
-  console.log('currentTemperature:', currentTemperature);
-  console.log('cityName:', weatherData.name);
-  console.log('country:', weatherData.sys?.country);
-
+  const currentTemperature = weatherData.main.temp - 273.15;
   const cityName = weatherData.name;
-  const country = weatherData.sys?.country;
+  const country = weatherData.sys.country;
+
+  const celsiusToFahrenheit = (celsius) => {
+    return (celsius * 9) / 5 + 32;
+  };
+
+  const fahrenheitToCelsius = (fahrenheit) => {
+    return ((fahrenheit - 32) * 5) / 9;
+  };
+
+  const displayTemperature = isCelsius
+    ? currentTemperature.toFixed(1)
+    : celsiusToFahrenheit(currentTemperature).toFixed(1);
+
+  const getWeatherIcon = (description) => {
+    switch (description) {
+      case 'clear sky':
+        return <SunIcon />;
+      case 'few clouds':
+        return <WeatherIcon />;
+      case 'scattered clouds':
+        return <WeatherIcon />;
+      case 'broken clouds':
+        return <WeatherIcon />;
+      case 'shower rain':
+        return <Snowflake />;
+      case 'rain':
+        return <Snowflake />;
+      case 'thunderstorm':
+        return <WeatherIcon />;
+      case 'snow':
+        return <Snowflake />;
+      default:
+        return <WeatherIcon />;
+    }
+  };
 
   return (
     <Container>
       <StyledToday>Today</StyledToday>
       <StyledDateDisplay>{currentDate}</StyledDateDisplay>
       <SnowflakeStyled>
-        <Snowflake />
+        {weatherDescription && getWeatherIcon(weatherDescription)}
       </SnowflakeStyled>
-      <StyledTemperature>{currentTemperature.toFixed(1)}°</StyledTemperature>
+      <StyledTemperature>{displayTemperature}°</StyledTemperature>
       <StyledMaterialLocation>
         <IconMaterialLocation />
       </StyledMaterialLocation>
       <StyledCyti>
         {cityName}, {country}
       </StyledCyti>
-      <InputSearch onCityChange={setSearchCity} />
+      <InputSearch onCityChange={setCurrentCity} />
       <StyledNowText>Now</StyledNowText>
       <StyledNowFon />
       <StyledNowIcon>
-        <Snowflake />
+        {weatherDescription && getWeatherIcon(weatherDescription)}
       </StyledNowIcon>
-      <StyledNowTemperature>
-        {currentTemperature.toFixed(1)}°
-      </StyledNowTemperature>
+      <StyledNowTemperature>{displayTemperature}°</StyledNowTemperature>
+      <TemperatureScaleToggle onToggle={handleTemperatureToggle} />
     </Container>
   );
 };
