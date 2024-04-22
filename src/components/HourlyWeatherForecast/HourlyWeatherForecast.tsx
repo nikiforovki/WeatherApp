@@ -20,9 +20,10 @@ const StyledBoxText = styled.div`
 `;
 
 const StyledTime = styled.div`
+  position: relative;
   width: 63px;
   height: 26px;
-  left: 600px;
+  left: 20px;
   font-size: 20px;
   color: #fdfdfd;
 `;
@@ -32,7 +33,7 @@ const StyledTemperature = styled.div`
   width: 34px;
   height: 31px;
   top: 90px;
-  left: 30px;
+  left: 25px;
   font-size: 26px;
   color: #fdfdfd;
 `;

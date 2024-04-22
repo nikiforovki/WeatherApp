@@ -297,6 +297,7 @@ const StyledSunset = styled.div`
 `;
 
 const StyledPrecipitation = styled.div`
+  position: fixed;
   width: 72px;
   height: 40px;
   top: 681px;
@@ -307,11 +308,11 @@ const StyledPrecipitation = styled.div`
 
 const StyledHumidity = styled.div`
   position: fixed;
-  width: 74px;
+  width: 100px;
   height: 42px;
   top: 681px;
-  left: 1030px;
-  font-size: 32px;
+  left: 1040px;
+  font-size: 34px;
   color: #072a41;
 `;
 
@@ -350,7 +351,7 @@ const StyledVisibility = styled.div`
   width: 96px;
   height: 40px;
   top: 847px;
-  left: 1030px;
+  left: 1040px;
   font-size: 34px;
   color: black;
 `;
@@ -389,6 +390,7 @@ export const WeatherForecastDetails: React.FC = () => {
     convertTimestampToHoursAndMinutes(weatherData.sys.sunrise) + 'am';
   const sunsetTime =
     convertTimestampToHoursAndMinutes(weatherData.sys.sunset) + 'pm';
+  const precipitation = 'Нет данных';
   const humidity = `${weatherData.main.humidity} %`;
   const wind = `${Math.round(weatherData.wind.speed)} km/h`;
   const pressure = `${weatherData.main.pressure} hPa`;
@@ -418,6 +420,7 @@ export const WeatherForecastDetails: React.FC = () => {
         id: 3,
         title: 'PRECIPITATION',
         image: <StyledWeatherRaindrop />,
+        precipitation,
       },
       {
         id: 4,
@@ -469,7 +472,7 @@ export const WeatherForecastDetails: React.FC = () => {
               <StyledTitle index={index}>{item.title}</StyledTitle>
               <StyledSunrese>{item.sunriseTime}</StyledSunrese>
               <StyledSunset>{item.sunsetTime}</StyledSunset>
-              <StyledPrecipitation></StyledPrecipitation>
+              <StyledPrecipitation>{item.precipitation}</StyledPrecipitation>
               <StyledHumidity>{item.humidity}</StyledHumidity>
               <StyledWind>{item.wind}</StyledWind>
               <StyledPressure>{item.pressure}</StyledPressure>

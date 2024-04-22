@@ -92,7 +92,7 @@ const StyledNowFon = styled.div`
   width: 80px;
   height: 120px;
   top: 255px;
-  left: 487px;
+  left: 490px;
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 40px;
   //
@@ -102,7 +102,7 @@ const StyledNowTemperature = styled.div`
   position: fixed;
   width: 24px;
   height: 31px;
-  left: 500px;
+  left: 510px;
   top: 326px;
   font-size: 26px;
   color: rgba(255, 255, 255, 0.6);
