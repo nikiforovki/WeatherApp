@@ -6,14 +6,42 @@ const ToggleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 163px;
-  height: 38px;
-  left: 1132px;
-  top: 32px;
   background: #ffffff;
   border-radius: 29px;
   padding: 5px;
   cursor: pointer;
+
+  @media (min-width: 375px) and (max-width: 768px) {
+    top: 32px;
+    left: 220px;
+    width: 130px;
+    height: 38px;
+  }
+  @media (min-width: 760px) and (max-width: 1024px) {
+    top: 32px;
+    left: 600px;
+    width: 163px;
+    height: 38px;
+  }
+  @media (min-width: 1024px) and (max-width: 1366px) {
+    top: 32px;
+    left: 850px;
+    width: 163px;
+    height: 38px;
+  }
+  @media (min-width: 1366px) and (max-width: 1920px) {
+    top: 32px;
+    left: 1132px;
+    width: 163px;
+    height: 38px;
+  }
+
+  @media (min-width: 1920px) {
+    top: 32px;
+    left: 1132px;
+    width: 163px;
+    height: 38px;
+  }
 `;
 
 const ActiveToggleButton = styled.button`

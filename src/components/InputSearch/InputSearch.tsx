@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import IconSearch from '../../../public/assets/images/IconSearch';
 
@@ -15,6 +15,7 @@ const SearchContainer = styled.div`
   height: 27px;
   box-sizing: border-box;
   background-color: transparent;
+  position: relative;
 `;
 
 const StyledInput = styled.input`
@@ -23,28 +24,163 @@ const StyledInput = styled.input`
   border-top: none;
   border-left: none;
   border-right: none;
-  border-radius: 4px;
-  width: 912px;
-  height: 27px;
   box-sizing: border-box;
   background-color: transparent;
-  font-size: 16px;
   color: #ffffff;
+
+  @media (min-width: 375px) and (max-width: 768px) {
+    font-size: 16px;
+    width: 150px;
+    height: 27px;
+    margin-left: 70px;
+    margin-top: -320px;
+
+    z-index: 101;
+  }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    font-size: 16px;
+    width: 70%;
+    height: 27px;
+    left: 20px;
+    top: 38px;
+  }
+  @media (min-width: 1024px) and (max-width: 1366px) {
+    font-size: 16px;
+    width: 600px;
+    height: 27px;
+    left: 71px;
+    top: 38px;
+  }
+  @media (min-width: 1366px) and (max-width: 1920px) {
+    font-size: 16px;
+    width: 912px;
+    height: 27px;
+    left: 71px;
+    top: 32px;
+  }
+  @media (min-width: 1920px) {
+    font-size: 16px;
+    width: 912px;
+    height: 27px;
+    left: 20px;
+  }
 `;
 
 const StyledIconSearch = styled.div`
   position: fixed;
   width: 20px;
   height: 20px;
-  margin-left: 890px;
-  margin-top: 5px;
+
+  @media (min-width: 375px) and (max-width: 768px) {
+    left: 200px;
+    top: 50px;
+  }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    left: 550px;
+    top: 50px;
+  }
+  @media (min-width: 1024px) and (max-width: 1366px) {
+    left: 671px;
+    top: 50px;
+  }
+  @media (min-width: 1366px) and (max-width: 1920px) {
+    left: 962px;
+    top: 32px;
+  }
+`;
+
+const Dropdown = styled.div`
+  position: fixed;
+  top: 50px;
+  background-color: rgba(255, 255, 255, 0.99);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 1;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+
+  @media (min-width: 375px) and (max-width: 768px) {
+    width: 150px;
+    left: 20px;
+    top: 80px;
+  }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    width: 70%;
+    left: 20px;
+    top: 80px;
+  }
+  @media (min-width: 1024px) and (max-width: 1366px) {
+    width: 600px;
+    left: 71px;
+    top: 80px;
+  }
+  @media (min-width: 1366px) and (max-width: 1920px) {
+    width: 912px;
+    left: 71px;
+    top: 80px;
+  }
+  @media (min-width: 1920px) {
+    width: 912px;
+    left: 71px;
+    top: 80px;
+  }
+`;
+
+const DropdownItem = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f1f1f1;
+  }
 `;
 
 export const InputSearch: React.FC<InputSearchProps> = ({ onCityChange }) => {
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const [inputValue, setInputValue] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const cities = ['Москва', 'Казань'];
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleCityChange = (city: string) => {
+    setInputValue(city);
+    onCityChange(city);
+    setShowDropdown(false);
+    setInputValue('');
+  };
+
+  const handleEnterKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
     if (event.key === 'Enter') {
-      onCityChange(event.currentTarget.value);
+      handleCityChange(inputValue);
     }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+    setShowDropdown(true);
+  };
+
+  const handleFocus = () => {
+    setShowDropdown(true);
+  };
+
+  const handleBlur = () => {
+    setTimeout(() => {
+      setShowDropdown(false);
+    }, 200);
   };
 
   return (
@@ -52,11 +188,28 @@ export const InputSearch: React.FC<InputSearchProps> = ({ onCityChange }) => {
       <StyledInput
         name='myInput'
         placeholder='Введите текст...'
-        onKeyPress={handleKeyPress}
+        value={inputValue}
+        onKeyPress={handleEnterKeyPress}
+        onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
       <StyledIconSearch>
         <IconSearch />
       </StyledIconSearch>
+      {showDropdown && (
+        <Dropdown ref={dropdownRef}>
+          {cities
+            .filter((city) =>
+              city.toLowerCase().includes(inputValue.toLowerCase()),
+            )
+            .map((city) => (
+              <DropdownItem key={city} onClick={() => handleCityChange(city)}>
+                {city}
+              </DropdownItem>
+            ))}
+        </Dropdown>
+      )}
     </SearchContainer>
   );
 };

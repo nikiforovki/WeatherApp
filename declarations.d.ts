@@ -8,6 +8,11 @@ declare module '*.svg' {
   export default content;
 }
 
+declare module '*.png' {
+  const value: any;
+  export default value;
+}
+
 declare module 'node-polyfill-webpack-plugin' {
   import { Plugin } from 'webpack';
   export default class NodePolyfillPlugin extends Plugin {}

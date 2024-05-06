@@ -52,6 +52,11 @@ const config: webpack.Configuration & { devServer: DevServerConfiguration } = {
         test: /\.s[ac]ss$/i,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
+      // Добавляем правило для обработки CSS файлов
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   plugins: [

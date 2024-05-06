@@ -9,9 +9,5 @@ const HeaderContainer = styled.div`
 `;
 
 export const WeatherHeader = () => {
-  return (
-    <HeaderContainer>
-      <TemperatureScaleToggle />
-    </HeaderContainer>
-  );
+  return <HeaderContainer>{/*<TemperatureScaleToggle />*/}</HeaderContainer>;
 };

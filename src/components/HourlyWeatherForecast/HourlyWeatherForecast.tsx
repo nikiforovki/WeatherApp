@@ -5,11 +5,37 @@ import IconСloudСomputing from '../../../public/assets/images/IconСloudСompu
 const BoxStyled = styled.div`
   position: fixed;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 24px;
-  top: 213px;
-  left: 591px;
+  top: 255px;
+
+  @media (min-width: 375px) and (max-width: 760px) {
+    display: none;
+  }
+
+  @media (min-width: 760px) and (max-width: 1024px) {
+    left: 487px;
+    & > div:nth-child(6),
+    & > div:nth-child(7) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1024px) and (max-width: 1366px) {
+    left: 591px;
+    & > div:nth-child(6),
+    & > div:nth-child(7) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1366px) and (max-width: 1920px) {
+    left: 591px;
+  }
+
+  @media (min-width: 1920px) {
+    left: 591px;
+  }
 `;
 
 const StyledBoxText = styled.div`
@@ -83,7 +109,8 @@ const StyledIconСloudСomputing = styled.div`
   top: 271px;
 `;
 
-const HourlyWeatherForecast = () => {
+const HourlyWeatherForecast = ({ error, weatherData }) => {
+  // const HourlyWeatherForecast = () => {
   const [forecastData, setForecastData] = useState([
     { time: '12 pm', temperature: 20 },
     { time: '1 pm', temperature: 20 },
@@ -93,6 +120,10 @@ const HourlyWeatherForecast = () => {
     { time: '5 pm', temperature: 20 },
     { time: '6 pm', temperature: 20 },
   ]);
+
+  if (error || !weatherData) {
+    return null;
+  }
 
   return (
     <BoxStyled>

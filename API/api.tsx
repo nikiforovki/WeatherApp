@@ -1,10 +1,11 @@
-const axios = require('axios');
-const apiKey = 'f6ff5e7dcd656163a217302f41dc2916';
-const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=Berlin&appid=${apiKey}`;
+import dotenv from 'dotenv';
+import axios from 'axios';
+
+dotenv.config();
 
 async function fetchWeatherData() {
   try {
-    const response = await axios.get(apiUrl);
+    const response = await axios.get(process.env.API_URL);
     console.log(response.data);
   } catch (error) {
     console.error('Ошибка при получении данных:', error);
@@ -15,7 +16,7 @@ fetchWeatherData();
 
 async function checkWeather() {
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(process.env.API_URL);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
