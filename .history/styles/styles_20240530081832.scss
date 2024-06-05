@@ -1,0 +1,44 @@
+:root {
+  --header-background-color: #fdfdfd;
+  --header-text-color: rgba(110, 108, 108, 0);
+
+  --ParentComponent-background-color: rgba(247, 247, 247, 0);
+  --ParentComponent-text-color: #101010;
+
+  --body-background: white;
+  --body-color: black;
+
+  --app-background-color: #ffffff;
+
+  --modal_content-background-color: #fdfdfd;
+  --modal_content-border-color: white;
+
+  --title-color: black;
+
+  --input-border-color: #6c63ff (--textAlert-background-color: black);
+}
+
+[data-theme='dark'] {
+  --header-background-color: rgba(16, 16, 16, 0.86);
+  --header-text-color: #ffffff;
+
+  --ParentComponent-background-color: rgb(37, 37, 37);
+  --ParentComponent-text-color: #ffffff;
+
+  --app-background-color: rgb(37, 37, 37);
+
+  --modal_content-background-color: #252525;
+  --modal_content-border-color: white;
+}
+
+[data-theme='light'] {
+  --header-background-color: rgb(247, 247, 247);
+  --header-text-color: #101010;
+
+  --app-background-color: rgb(253, 253, 253);
+
+  --modal_content-background-color: #f7f7f7;
+  --modal_content-border-color: #6c63ff;
+
+  --input-border-color: #6c63ff (--textAlert-background-color: #fdfdfd);
+}
