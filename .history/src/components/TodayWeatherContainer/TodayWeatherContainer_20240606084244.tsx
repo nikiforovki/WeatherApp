@@ -8,7 +8,8 @@ import { RootState } from '../../Redux/store/store';
 import { selectDescriptionIcon } from '../../Redux/slice/currentweatherSlice';
 import { selectTemperature } from '../../Redux/slice/currentweatherSlice';
 import { selectCity } from '../../Redux/slice/currentweatherSlice';
-import IconError from '../../../public/assets/images/IconError';
+// import IconError from '../../../public/assets/images/IconError';
+import IconError from '../../../public/assets/images/IconError2.png';
 import { TemperatureScaleToggle } from '../ToggleTemperatureScale/ToggleTemperatureScale';
 import { selectFirstCityCountryName } from '../../Redux/slice/currentweatherSlice';
 
@@ -114,10 +115,6 @@ const StyledNowTemperature = styled.div`
   top: 336px;
   font-size: 26px;
   color: var(--temperature-now-text-color);
-
-  @media (max-width: 1024px) {
-    display: none;
-  }
 `;
 
 const StyledNowIcon = styled.div`
