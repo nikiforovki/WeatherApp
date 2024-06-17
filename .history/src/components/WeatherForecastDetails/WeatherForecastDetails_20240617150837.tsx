@@ -24,6 +24,11 @@ import AwesomeTemperatureHigh from '../../../public/assets/images/IconAwesomeTem
 import MaterialVisibility from '../../../public/assets/images/IconMaterialVisibility.svg';
 import { TemperatureScaleToggle } from '../../../src/components/ToggleTemperatureScale/ToggleTemperatureScale';
 
+const HelveticaText = styled.p`
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 18px;
+`;
+
 const Container = styled.div`
   position: fixed;
   display: flex;

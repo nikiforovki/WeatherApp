@@ -28,9 +28,26 @@ const Container = styled.div`
   position: fixed;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   top: 613px;
   left: 71px;
   max-width: 1280px;
+
+  @media (max-width: 375px) {
+  width:200px
+    left: 10px;
+    top: 800px;
+  }
+      @media (max-width: 735px) {
+  width:200px
+    left: 10px;
+    top: 800px;
+  }
+  @media (max-width: 1024px) {
+  width:200px
+    left: 70px;
+    top: 850px;
+  }
 `;
 
 const WeatherCard = styled.div`
@@ -42,7 +59,6 @@ const WeatherCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  // justify-content: center;
 `;
 
 const StyledDescription = styled.div`
@@ -60,7 +76,7 @@ const StyledImg = styled.div`
   width: 46px;
   height: 41px;
   left: 100px;
-  top: 38px;
+  top: 50px;
   pading: 0;
 `;
 
@@ -81,6 +97,17 @@ const StyledLine = styled.div`
   width: 1366px;
   height: 0.5px;
   border: 1px solid var(--weatherCardline);
+
+   @media (max-width: 375px) {
+    top: 400px;
+  }
+      @media (max-width: 735px) {
+  width:200px
+    top: 600px;
+  }
+  @media (max-width: 1024px) {
+    top: 800px;
+  }
 `;
 const StyledText = styled.div`
   position: fixed;
@@ -90,10 +117,34 @@ const StyledText = styled.div`
   left: 71px;
   width: 190px;
   height: 31px;
+   @media (max-width: 375px) {
+    top: 700px;
+  }
+      @media (max-width: 735px) {
+  width:200px
+    top: 750px;
+  }
+  @media (max-width: 1024px) {
+    top: 820px;
+  }
+`;
+
+const SkeletonWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+`;
+
+const StyledSkeleton = styled(Skeleton)`
+  width: 100%;
+  height: 146px;
+  border-radius: 4px;
 `;
 
 export const WeatherForecastDetails: React.FC = () => {
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Добавлено состояние для управления загрузкой
   const dispatch = useDispatch();
   const weatherData = useSelector(
     (state: RootState) => state.weather?.weatherData,
@@ -110,6 +161,7 @@ export const WeatherForecastDetails: React.FC = () => {
   const sunset = useSelector(selectSunset);
   const humidity = useSelector(selectHumidity);
   const feelsLike = useSelector(selectFeelsLike);
+  console.log(feelsLike);
   const pressure = useSelector(selectPressure);
   const precipitation = useSelector(selectPrecipitation);
 
@@ -121,23 +173,29 @@ export const WeatherForecastDetails: React.FC = () => {
     if (error) {
       setShowError(true);
     }
+    // Здесь должна быть ваша логика загрузки данных
+    // После успешной загрузки данных установите isLoading в false
+    setIsLoading(false);
   }, [error]);
 
   if (showError) {
     return <div></div>;
   }
 
-  if (currentWeatherData) {
-  }
-
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <SkeletonTheme color='#FFFFFF' highlightColor='#1AADE3'>
+        <SkeletonWrapper>
+          {[...Array(8)].map((_, i) => (
+            <StyledSkeleton key={i} />
+          ))}
+        </SkeletonWrapper>
+      </SkeletonTheme>
+    );
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-  const visibilityKm = visibility / 1000;
+  const windSpeedKm = Math.round(windSpeed);
+  const visibilityKm = Math.round(visibility / 1000);
 
   const sunsetTime = sunset
     ? new Date(sunset * 1000)
@@ -220,7 +278,7 @@ export const WeatherForecastDetails: React.FC = () => {
             <StyledValue>{humidity}%</StyledValue>
           )}
           {index === windIndex && windSpeed !== undefined && (
-            <StyledValue>{windSpeed} km/h</StyledValue>
+            <StyledValue>{windSpeedKm} km/h</StyledValue>
           )}
           {index === precrationIndex && precipitation !== undefined && (
             <StyledValue>{precipitation} % </StyledValue>
@@ -229,9 +287,7 @@ export const WeatherForecastDetails: React.FC = () => {
             <StyledValue>{pressure} hPa</StyledValue>
           )}
           {index === feelslikeIndex && feelsLike !== undefined && (
-            <StyledValue>
-              {feelsLike}°{temperatureScale}
-            </StyledValue>
+            <StyledValue>{feelsLike}°</StyledValue>
           )}
           {index === visibilityIndex && visibility !== undefined && (
             <StyledValue>{visibilityKm} km/h</StyledValue>

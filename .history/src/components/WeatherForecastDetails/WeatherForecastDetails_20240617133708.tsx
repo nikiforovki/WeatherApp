@@ -23,14 +23,33 @@ import GroupArrow from '../../../public/assets/images/IconGroupArrow.svg';
 import AwesomeTemperatureHigh from '../../../public/assets/images/IconAwesomeTemperatureHigh.svg';
 import MaterialVisibility from '../../../public/assets/images/IconMaterialVisibility.svg';
 import { TemperatureScaleToggle } from '../../../src/components/ToggleTemperatureScale/ToggleTemperatureScale';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const Container = styled.div`
   position: fixed;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   top: 613px;
   left: 71px;
   max-width: 1280px;
+
+  @media (max-width: 375px) {
+  width:200px
+    left: 10px;
+    top: 800px;
+  }
+      @media (max-width: 735px) {
+  width:200px
+    left: 10px;
+    top: 800px;
+  }
+  @media (max-width: 1024px) {
+  width:200px
+    left: 70px;
+    top: 850px;
+  }
 `;
 
 const WeatherCard = styled.div`
@@ -42,7 +61,6 @@ const WeatherCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  // justify-content: center;
 `;
 
 const StyledDescription = styled.div`
@@ -60,7 +78,7 @@ const StyledImg = styled.div`
   width: 46px;
   height: 41px;
   left: 100px;
-  top: 38px;
+  top: 50px;
   pading: 0;
 `;
 
@@ -81,6 +99,17 @@ const StyledLine = styled.div`
   width: 1366px;
   height: 0.5px;
   border: 1px solid var(--weatherCardline);
+
+   @media (max-width: 375px) {
+    top: 400px;
+  }
+      @media (max-width: 735px) {
+  width:200px
+    top: 600px;
+  }
+  @media (max-width: 1024px) {
+    top: 800px;
+  }
 `;
 const StyledText = styled.div`
   position: fixed;
@@ -90,14 +119,36 @@ const StyledText = styled.div`
   left: 71px;
   width: 190px;
   height: 31px;
+   @media (max-width: 375px) {
+    top: 700px;
+  }
+      @media (max-width: 735px) {
+  width:200px
+    top: 750px;
+  }
+  @media (max-width: 1024px) {
+    top: 820px;
+  }
+`;
+
+const SkeletonWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+const StyledSkeleton = styled(Skeleton)`
+  width: 300px;
+  height: 150px;
+  border-radius: 4px;
 `;
 
 export const WeatherForecastDetails: React.FC = () => {
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  const weatherData = useSelector(
-    (state: RootState) => state.weather?.weatherData,
-  );
+  const weatherData = useSelector((state: RootState) => state.weather?.weatherData);
   const error = useSelector((state: RootState) => state.error);
   console.log('Ошибка на город:', error);
 
@@ -106,38 +157,44 @@ export const WeatherForecastDetails: React.FC = () => {
 
   const currentWeatherData = useSelector(selectCurrentWeatherDetails);
 
-  const sunrise = useSelector(selectSunrise);
-  const sunset = useSelector(selectSunset);
-  const humidity = useSelector(selectHumidity);
-  const feelsLike = useSelector(selectFeelsLike);
-  const pressure = useSelector(selectPressure);
-  const precipitation = useSelector(selectPrecipitation);
-
-  const visibility = useSelector(selectVisibility);
-
-  const windSpeed = useSelector(selectWindSpeed);
+  // Получение данных из селекторов...
 
   useEffect(() => {
     if (error) {
       setShowError(true);
+    } else if (!error &&!weatherData) {
+      setIsLoading(true); // Устанавливаем isLoading в true, если нет данных и нет ошибки
+    } else {
+      setIsLoading(false); // Устанавливаем isLoading в false, когда данные получены
     }
-  }, [error]);
+  }, [error, weatherData]);
 
   if (showError) {
-    return <div></div>;
-  }
-
-  if (currentWeatherData) {
+    return <div>Произошла ошибка при загрузке данных</div>;
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <SkeletonTheme color="#FFFFFF" highlightColor="#1AADE3">
+        <div style={{ padding: '20px' }}> {/* Пространство для скелетона */}
+          {[...Array(8)].map((_, i) => (
+            <Skeleton key={i} width={100} height={30} />
+          ))}
+        </div>
+      </SkeletonTheme>
+    );
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-  const visibilityKm = visibility / 1000;
+  // Рендеринг основного контента после загрузки данных...
+  return (
+    <div>
+      {/* Ваш основной контент здесь */}
+    </div>
+  );
+};
+
+  const windSpeedKm = Math.round(windSpeed);
+  const visibilityKm = Math.round(visibility / 1000);
 
   const sunsetTime = sunset
     ? new Date(sunset * 1000)
@@ -220,7 +277,7 @@ export const WeatherForecastDetails: React.FC = () => {
             <StyledValue>{humidity}%</StyledValue>
           )}
           {index === windIndex && windSpeed !== undefined && (
-            <StyledValue>{windSpeed} km/h</StyledValue>
+            <StyledValue>{windSpeedKm} km/h</StyledValue>
           )}
           {index === precrationIndex && precipitation !== undefined && (
             <StyledValue>{precipitation} % </StyledValue>
@@ -229,9 +286,7 @@ export const WeatherForecastDetails: React.FC = () => {
             <StyledValue>{pressure} hPa</StyledValue>
           )}
           {index === feelslikeIndex && feelsLike !== undefined && (
-            <StyledValue>
-              {feelsLike}°{temperatureScale}
-            </StyledValue>
+            <StyledValue>{feelsLike}°</StyledValue>
           )}
           {index === visibilityIndex && visibility !== undefined && (
             <StyledValue>{visibilityKm} km/h</StyledValue>
