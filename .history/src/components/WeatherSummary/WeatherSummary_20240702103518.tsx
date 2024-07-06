@@ -1,0 +1,68 @@
+import React from 'react';
+import styled from 'styled-components';
+import TodayWeatherContainer from '../TodayWeatherContainer/TodayWeatherContainer';
+import HourlyWeatherForecast from '../HourlyWeatherForecast/HourlyWeatherForecast';
+import ToggleTheme from '../ToggleTheme/ToggleTheme';
+
+const WeatherSummaryConteiner = styled.div`
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const StyledLine = styled.div`
+  top: 510px;
+  left: 0;
+  // width: 1366px;
+  height: 0.5px;
+  border: 1px solid var(--weatherCardline);
+  margin-top: 135px;
+
+  @media (max-width: 375px) {
+    top: 650px;
+  }
+
+  @media (max-width: 735px) {
+    top: 750px;
+  }
+
+  @media (max-width: 1024px) {
+    margin-top: 100px;
+  }
+`;
+const StyledText = styled.div`
+  font-size: 24px;
+  color: var(--weatherCardline);
+  margin-top: 32px;
+  // margin-left: 71px;
+  width: 190px;
+  height: 31px;
+
+  @media (max-width: 375px) {
+    margin-top: 32px;
+    margin-left: 71px;
+  }
+
+  @media (max-width: 1024px) {
+    // margin-top: 32px;
+    margin-left: 71px;
+  }
+`;
+const StyledTheme = styled.div`
+  // margin-top: 20px;
+  // margin-left: 71px;
+`;
+
+export const WeatherSummary = () => {
+  return (
+    <WeatherSummaryConteiner>
+      <StyledTheme>
+        <ToggleTheme />
+      </StyledTheme>
+
+      <TodayWeatherContainer />
+      <HourlyWeatherForecast />
+      <StyledLine />
+      <StyledText>Weather Details</StyledText>
+    </WeatherSummaryConteiner>
+  );
+};
