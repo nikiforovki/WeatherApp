@@ -9,6 +9,14 @@ enum Theme {
 
 const DarkModeContainer = styled.div`s
   top: 38px;
+  // margin-left: 1250px;
+  // @media (max-width: 375px) {
+  //   margin-left: 20px;
+  // }
+
+  // @media (max-width: 1024px) {
+  //   margin-left: 20px;
+  // }
 `;
 
 const DarkModeLabel = styled.label`
@@ -55,6 +63,9 @@ const DarkModeLabel = styled.label`
 
   @media (min-width: 1025px) and (max-width: 1366px) {
     left: 10px;
+    // top: 60px;
+    // left: -100px;
+    // right: 10px;
   }
 
   @media (min-width: 1367px) {

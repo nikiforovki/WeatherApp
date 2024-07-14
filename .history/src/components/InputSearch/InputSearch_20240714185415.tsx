@@ -133,7 +133,7 @@ const Dropdown = styled.div`
   }
 
   @media (min-width: 1025px) and (max-width: 1366px) {
-    left: 71px;
+    left: 10px;
   }
 
   @media (min-width: 1367px) {

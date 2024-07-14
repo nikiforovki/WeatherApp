@@ -63,6 +63,7 @@ const StyledInput = styled.input`
   border-left: none;
   border-right: none;
   border-radius: 4px;
+  // width: 912px;
   height: 27px;
   box-sizing: border-box;
   background-color: transparent;
@@ -72,12 +73,12 @@ const StyledInput = styled.input`
 
   &:focus {
     color: #ffffff;
-  };
+  }
 
   &::placeholder {
     color: var(--input-text-color, #FFFFFF99)
     font-family: 'Helvetica Neue', sans-serif;
-  };
+  }
 
   @media (min-width: 375px) and (max-width: 768px) {
     width: 600px;
@@ -91,10 +92,15 @@ width: 800px;
 
   @media (min-width: 1025px) and (max-width: 1294px) {
     width: 730px;
+    // transition: width 0.5s ease;
+    // width: auto;
   };
 
     @media (min-width: 1295px) and (max-width: 1366px) {
     width: 912px;
+
+    // transition: width 0.5s ease;
+    // width: auto;
   };
 
   @media (min-width: 1367px) {
@@ -133,7 +139,7 @@ const Dropdown = styled.div`
   }
 
   @media (min-width: 1025px) and (max-width: 1366px) {
-    left: 71px;
+    left: 10px;
   }
 
   @media (min-width: 1367px) {

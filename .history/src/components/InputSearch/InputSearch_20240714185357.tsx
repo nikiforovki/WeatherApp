@@ -63,6 +63,7 @@ const StyledInput = styled.input`
   border-left: none;
   border-right: none;
   border-radius: 4px;
+  
   height: 27px;
   box-sizing: border-box;
   background-color: transparent;
@@ -133,7 +134,7 @@ const Dropdown = styled.div`
   }
 
   @media (min-width: 1025px) and (max-width: 1366px) {
-    left: 71px;
+    left: 10px;
   }
 
   @media (min-width: 1367px) {
