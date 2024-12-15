@@ -1,0 +1,2 @@
+export const THEME_LOCAL_STORAGE_KEY = 'theme';
+console.log('THEME_LOCAL_STORAGE_KEY', THEME_LOCAL_STORAGE_KEY);
